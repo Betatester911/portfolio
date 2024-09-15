@@ -15,7 +15,8 @@
 </head>
 
 <body>
-    <div class="nav_content p-1 custom-nav">
+
+    <div class="nav_content px-2 py-0 custom-nav">
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <span class="navbar-brand">Portfolio</span>
@@ -28,19 +29,17 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 top-navs">
-                        <li class="nav-item mx-1" >
-                            <a class="nav-link active" href="#" onclick="changeContent('welcome', this)"
-                                ">Welcome</a>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link active" onclick="changeContent('welcome', this)" ">Welcome</a>
                         </li>
-                        <li class="nav-item mx-1">
-                            <a class="nav-link"  href="#" onclick="changeContent('about', this)">About</a>
+                        <li class=" nav-item mx-2">
+                                <a class="nav-link" onclick="changeContent('resume', this)">Resume</a>
                         </li>
-                        <li class="nav-item mx-1">
-                            <a class="nav-link"  href="#" onclick="changeContent('projects', this)"
-                        >Projects</a>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link" onclick="changeContent('projects', this)">Projects</a>
                         </li>
-                        <li class="nav-item mx-1">
-                            <a class="nav-link"  href="#" onclick="changeContent('contact', this)" >Contact</a>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link" onclick="changeContent('contact', this)">Contact</a>
                         </li>
                     </ul>
                 </div>
@@ -48,22 +47,26 @@
         </nav>
     </div>
 
-    <div id="content" class="content p-2 px-3">
+    <div class="progress-bar-container" style="display: none;">
+        <div class="progress" role="progressbar"  aria-valuenow="0" aria-valuemin="0"
+            aria-valuemax="100">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+        </div>
+    </div>
+
+
+    <div id="content" class="content">
         Contents
     </div>
 
 
-
-
-    <div class="footer">
+    <!-- <div class="footer">
         <footer class="bg-light text-center py-2">
             <div class="container">
                 <span class="text-muted">Built by Sudip Shrestha</span>
             </div>
         </footer>
-    </div>
-
-
+    </div> -->
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -77,22 +80,48 @@
 
     <script defer>
         function changeContent(file_name, clickedElement) {
-            // Load the content
-            $("#content").load("contents/" + file_name + ".html");
+            $('.progress-bar-container').show();
+            $('#progress-bar').css('width', '0%').attr('aria-valuenow', 0);
 
-            // Remove 'active' class from all nav links
+            $("#content").load("contents/" + file_name + ".html", function () {
+                $('#progress-bar').css('width', '100%').attr('aria-valuenow', 100);
+                setTimeout(function () {
+                    $('.progress-bar-container').fadeOut();
+                }, 0);
+            });
+
             $(".navbar-nav .nav-link").removeClass("active");
-
-            // Add 'active' class to the clicked link
             $(clickedElement).addClass("active");
         }
 
         $(document).ready(function () {
-            $("#content").load("contents/welcome.html");
+            $('.progress-bar-container').show();
+            $("#content").load("contents/welcome.html", function () {
+                $('#progress-bar').css('width', '100%').attr('aria-valuenow', 100);
+                setTimeout(function () {
+                    $('.progress-bar-container').fadeOut();
+                }, 0);
+            });
         });
 
+        $(document).ajaxStart(function () {
+            $('.progress-bar-container').show();
+            $('#progress-bar').css('width', '0%').attr('aria-valuenow', 0);
+        });
 
+        $(document).ajaxComplete(function () {
+            $('#progress-bar').css('width', '100%').attr('aria-valuenow', 100);
+            setTimeout(function () {
+                $('.progress-bar-container').fadeOut();
+            }, 0);
+        });
+
+        $(document).ajaxError(function () {
+            $('.progress-bar-container').fadeOut();
+        });
     </script>
+
+
 </body>
 
 </html>
